@@ -1,14 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendSecurityEvent } from '@/lib/sentinel';
 import { getUserId } from '@/lib/auth';
 import { getDb, isDatabaseConfigured } from '@/lib/db';
 import { authUnavailable, fail } from '@/lib/api';
 
 export const runtime = 'nodejs';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   if (!isDatabaseConfigured()) return authUnavailable();
   const userId = await getUserId();
-  if (!userId) return fail('Iniciá sesión para ver tus favoritos.', 401);
+  if (!userId) { await sendSecurityEvent(request, 'unauthorized_access', '', 'Acceso sin sesión a favoritos'); return fail('Iniciá sesión para ver tus favoritos.', 401); }
   try {
     const sql = getDb();
     const rows = await sql`SELECT earthquake_id, title, magnitude, latitude, longitude, depth_km, occurred_at, usgs_url, created_at
@@ -27,7 +28,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   if (!isDatabaseConfigured()) return authUnavailable();
   const userId = await getUserId();
-  if (!userId) return fail('Iniciá sesión para guardar eventos.', 401);
+  if (!userId) { await sendSecurityEvent(request, 'unauthorized_access', '', 'Intento de guardar favoritos sin sesión'); return fail('Iniciá sesión para guardar eventos.', 401); }
   try {
     const body = await request.json();
     const id = typeof body.id === 'string' ? body.id.trim() : '';
