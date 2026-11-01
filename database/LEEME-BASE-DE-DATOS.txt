@@ -1,0 +1,25 @@
+ATENCIÓN SI YA USÁS ATLAS V3 EN NEON:
+NO EJECUTES 00-INSTALAR-TODO.sql. Para V4, aplicá SOLO 06-ATLAS-V4.sql
+(asegurándote de haber ejecutado previamente las migraciones 04 y 05).
+Esta migración no elimina tus usuarios, favoritos ni investigaciones.
+
+----- DOCUMENTACIÓN ORIGINAL DE INSTALACIÓN DESDE CERO -----
+ATLAS - BASE DE DATOS POSTGRESQL / NEON
+
+1. Crear un proyecto gratuito en https://console.neon.tech/
+2. Abrir Neon > SQL Editor.
+3. Copiar TODO el contenido de 00-INSTALAR-TODO.sql y ejecutar Run.
+4. Esto crea las tablas y carga regiones. No necesitás ejecutar 01 ni 02.
+5. Ejecutar 03-verificar.sql para comprobar las tablas.
+6. Copiar la URL de conexión de Neon (Connection Details / Connect).
+7. En la carpeta del proyecto ATLAS, copiar .env.example a .env.local.
+8. Reemplazar DATABASE_URL por la URL de Neon.
+9. Generar un JWT_SECRET seguro según las instrucciones del README.
+10. Reiniciar el servidor: npm.cmd run dev
+11. Abrir http://localhost:3000/api/health y verificar "database":"connected".
+12. Registrarte en la web. El usuario se guardará en users y los favoritos en favorites.
+
+No hace falta instalar PostgreSQL local. Los archivos .sql son la definición
+completa de la base de datos, no un servidor que se instala.
+
+NO subir .env.local ni la cadena de conexión a GitHub.
